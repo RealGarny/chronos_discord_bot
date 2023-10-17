@@ -1,6 +1,9 @@
 import discord
 from discord.ext import commands
-from settings import DISCORD_TOKEN
+import settings
+import logging
+
+logger = logging.getLogger("bot")
 
 def main():
     intents = discord.Intents.default()
@@ -9,10 +12,10 @@ def main():
 
     @bot.event
     async def on_ready():
-        print(f"bot started as: {bot.user}")
+        logger.info(f"User: {bot.user} (ID: {bot.user.id})")
         print('-----------------------')
 
-    bot.run(DISCORD_TOKEN)
+    bot.run(settings.DISCORD_TOKEN, root_logger=True)
 
 if __name__ == "__main__":
     main()
