@@ -9,23 +9,24 @@ def main():
     intents = discord.Intents.default()
     intents.message_content = True
 
-    bot = commands.Bot(command_prefix="!", intents=intents)
+    client = discord.Client(intents=intents)
 
-    @bot.event
+    @client.event
     async def on_ready():
-        logger.info(f"User: {bot.user} (ID: {bot.user.id})")
+        logger.info(f"User: {client.user} (ID: {client.user.id})")
         print('-----------------------')
 
-    @bot.command(
-            aliases=['p'],
-            help="Pong",
-            description="Базовая первая команда",
-            brief = "Тест"
-    )
-    async def ping(ctx):
-        await ctx.send("pong")
+    @client.event
+    async def on_message(message):
+        msg = message.content
+        #Игнорирование собственных сообщений
+        if message.author == client.user:
+            return
+        
+        if msg.startswith("!ping"):
+            await message.channel.send("pong!")
 
-    bot.run(settings.DISCORD_TOKEN, root_logger=True)
+    client.run(settings.DISCORD_TOKEN, root_logger=True)
 
 if __name__ == "__main__":
     main()
