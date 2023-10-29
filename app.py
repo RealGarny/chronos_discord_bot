@@ -19,7 +19,7 @@ def main():
     yt_dl_opts = {'format': 'bestaudio/best'}
     ytdl = YoutubeDL(yt_dl_opts)
 
-    ffmpeg_options = {'options': "-vn"}
+    ffmpeg_options = {"before_options": "-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5", "options":"-vn"}
 
 
     # This event happens when the bot gets run
@@ -36,8 +36,8 @@ def main():
             try:
                 voice_client = await msg.author.voice.channel.connect()
                 voice_clients[voice_client.guild.id] = voice_client
-            except:
-                print("error")
+            except Exception as err:
+                print(err)
 
             try:
                 url = msg.content.split()[1]
