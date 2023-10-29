@@ -1,5 +1,6 @@
 import discord
 from discord.ext import commands
+import os
 import settings
 import logging
 
@@ -9,24 +10,30 @@ def main():
     intents = discord.Intents.default()
     intents.message_content = True
 
-    client = discord.Client(intents=intents)
+    bot = commands.Bot(command_prefix="#", intents=intents)
 
-    @client.event
+    @bot.event
     async def on_ready():
-        logger.info(f"User: {client.user} (ID: {client.user.id})")
+        logger.info(f"User: {bot.user} (ID: {bot.user.id})")
         print('-----------------------')
 
-    @client.event
+    @bot.event
     async def on_message(message):
         msg = message.content
         #Игнорирование собственных сообщений
-        if message.author == client.user:
+        if message.author == bot.user:
             return
         
-        if msg.startswith("!ping"):
-            await message.channel.send("pong!")
+        if msg.startswith("!music") or msg.startswith("!музыка"):
+            await message.channel.send(msg)
+            commandsEN = ["play", "stop", "pause", "queue", "resume"]
+            commandsRU = ["начать", "стоп", "пауза", "очередь", "продолжить"]
+            if msg.split()[1] in commandsEN:
+                await message.channel.send("Command exists!")
+            if msg.split()[1] in commandsRU:
+                await message.channel.send("Есть Команда!")
 
-    client.run(settings.DISCORD_TOKEN, root_logger=True)
+    bot.run(settings.DISCORD_TOKEN, root_logger=True)
 
 if __name__ == "__main__":
     main()
